@@ -56,14 +56,25 @@ if __name__ == '__main__':
         
     devices = []
     aps = []
-    ssids = []
+#    ssids = []
         
     for line in stdout:
         try:
-            int(line[0])
+            int(line[0])# tests to see if the line is a mac address
+                        # and therefore a valid line by trying to
+                        # convert the first character to an int.
+                        # if it fails it will just pass the line.
             devices.append(line[0:16])
             aps.append(line[18:29])
 #            ssids.append(line[])
         except:
             pass
-    
+        
+    dbAdd = []
+    i = 0
+    while i < len(devices):
+        dbAdd.append({devices[i]: aps[i]})
+        i += 1
+        
+    for device in dbAdd:
+        deviceDB.store(device)

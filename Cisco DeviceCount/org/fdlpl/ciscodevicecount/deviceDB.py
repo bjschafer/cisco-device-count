@@ -19,7 +19,6 @@ class deviceDB(object):
         c.execute('''CREATE TABLE IF NOT EXISTS devices
         (mac TEXT PRIMARY KEY,
         ap TEXT,
-        ssid TEXT,
         datetime TEXT)''')
         self.conn.commit()
         c.close()
@@ -27,17 +26,14 @@ class deviceDB(object):
     def store(self, device):
         '''
         Stores the device in the database.
-        Takes a dictionary as input, with three
-        keys: mac, ap, and ssid.
+        Takes a dictionary as input, with two
+        keys: mac and ap.
         
         mac is the mac address formatted as found on the
         wireless controller
         
         ap is the AP name it was connected to, as found on
         the wireless controller
-        
-        ssid is the ssid (public or staff) that the device
-        is connected to.
         
         To store in the database it has to be a tuple, so
         t is created as the tuple with the requisite values.
@@ -46,10 +42,10 @@ class deviceDB(object):
         '''
         
         c = self.conn.cursor()
-        t = (device["mac"], device["ap"], device["ssid"], str(datetime.now()))
+        t = (device["mac"], device["ap"], str(datetime.now()))
         
         c.execute('''INSERT OR REPLACE INTO devices VALUES
-        (?, ?, ?, ?)''',t)
+        (?, ?, ?)''',t)
         self.conn.commit()
         c.close()
         
