@@ -1,8 +1,11 @@
 import socket
+import time
 import libssh2
 import configparser
 from os.path import isfile
 from org.fdlpl.ciscodevicecount.deviceDB import deviceDB
+
+database = None
 
 def createConfig():
     config = configparser.ConfigParser()
@@ -13,7 +16,7 @@ def createConfig():
     with open(".cdcconfig", 'w') as configfile:
         config.write(configfile)
 
-if __name__ == '__main__':
+def getDevices():
     # load configuration file
     if not isfile(".cdcconfig"):
         createConfig()
@@ -56,8 +59,7 @@ if __name__ == '__main__':
         
     devices = []
     aps = []
-#    ssids = []
-        
+    
     for line in stdout:
         try:
             int(line[0])# tests to see if the line is a mac address
@@ -66,7 +68,6 @@ if __name__ == '__main__':
                         # if it fails it will just pass the line.
             devices.append(line[0:16])
             aps.append(line[18:29])
-#            ssids.append(line[])
         except:
             pass
         
@@ -77,4 +78,22 @@ if __name__ == '__main__':
         i += 1
         
     for device in dbAdd:
-        deviceDB.store(device)
+        database.store(device)
+        
+def getCount():
+    return database.getCount()
+
+def flush():
+    database.flush()
+
+if __name__ == '__main__':
+    createConfig()
+    while True:
+        i = 0
+        while i < 48:
+            getDevices()
+            i += 1
+            time.sleep(300) # waits 5 minutes
+        print(getCount)
+        flush()
+        
