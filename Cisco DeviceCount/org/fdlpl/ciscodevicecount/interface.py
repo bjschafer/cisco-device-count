@@ -8,18 +8,18 @@ from org.fdlpl.ciscodevicecount.deviceDB import deviceDB
 database = None
 
 def createConfig():
-    config = configparser.ConfigParser()
-    config['DEFAULT'] = {'ControllerAddress': 'xxx.xxx.xxx.xxx',
-                         'Username': 'user',
-                         'Password': 'password',
-                         'DBLocation': 'countDB'}
-    with open(".cdcconfig", 'w') as configfile:
-        config.write(configfile)
+    if not isfile(".cdcconfig"):
+        config = configparser.ConfigParser()
+        config['DEFAULT'] = {'ControllerAddress': 'xxx.xxx.xxx.xxx',
+                             'Username': 'user',
+                             'Password': 'password',
+                             'DBLocation': 'countDB'}
+        with open(".cdcconfig", 'w') as configfile:
+            config.write(configfile)
 
 def getDevices():
     # load configuration file
-    if not isfile(".cdcconfig"):
-        createConfig()
+    createConfig()
     config = configparser.ConfigParser()
     config.read(".cdcconfig")
     dbLocation = config['DEFAULT']['DBLocation']
@@ -38,7 +38,7 @@ def getDevices():
     session.userauth_password(user, pword)
     
     channel = session.channel()
-    channel.execute('terminal length 0')
+#    channel.execute('terminal length 0')
     channel.execute('show client summary')
     
     stdout,stderr = []
@@ -92,6 +92,7 @@ if __name__ == '__main__':
         i = 0
         while i < 48:
             getDevices()
+            print("Going strong.")
             i += 1
             time.sleep(300) # waits 5 minutes
         print(getCount)
