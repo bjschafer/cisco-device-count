@@ -11,12 +11,14 @@ database = None
 
 def createConfig():
     if not isfile(".cdcconfig"):
-        config = ConfigParser.ConfigParser()
-        config['DEFAULT'] = {'ControllerAddress': 'xxx.xxx.xxx.xxx',
-                             'Password': 'password',
-                             'DBLocation': 'countDB'}
-        with open(".cdcconfig", 'w') as configfile:
-            config.write(configfile)
+        Config = ConfigParser.RawConfigParser()
+        Config.add_section("DEFAULT")
+        Config.set('DEFAULT', 'password', 'YOUR_PASS_HERE')
+        Config.set('DEFAULT', 'username', 'YOUR_USERNAME')
+        Config.set('DEFAULT', 'controlleraddress', '000.000.000.000')
+        Config.set('DEFAULT', 'dblocation', 'countDB')
+        with open('.cdcconfig', 'wb') as configfile:
+            config.write(configfile)        
             
 def process(info):
     devices = []
@@ -70,12 +72,12 @@ def flush():
 if __name__ == '__main__':
     # load configuration file
     createConfig()
-    config = ConfigParser.ConfigParser()
+    config = ConfigParser.RawConfigParser()
     config.read(".cdcconfig")
-    dbLocation = config['DEFAULT']['DBLocation']
-    controllerAddress = config['DEFAULT']['ControllerAddress']
-    user = config['DEFAULT']['Username']
-    pword = config['DEFAULT']['Password']
+    dbLocation = config.get('DEFAULT','dblocation')
+    controllerAddress = config.get('DEFAULT','controlleraddress')
+    user = config.get('DEFAULT','username')
+    pword = config.get('DEFAULT','password')
     
     # load database
     database = deviceDB(dbLocation)
@@ -87,13 +89,12 @@ if __name__ == '__main__':
     while True:
         i = 0
         while i < 48:
-            getInfo()
+            start(account, host, getInfo)
             print "Going strong."
             i += 1
             time.sleep(300)
         print getCount()
         flush()
-    start(account,host,getInfo)
     
 
 #if __name__ == '__main__':
