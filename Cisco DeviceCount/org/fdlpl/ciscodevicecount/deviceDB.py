@@ -42,7 +42,7 @@ class deviceDB(object):
         '''
         
         c = self.conn.cursor()
-        t = (device["mac"], device["ap"], str(datetime.now()))
+        t = (device["mac"], device["ap"], datetime.now())
         
         c.execute('''INSERT OR REPLACE INTO devices VALUES
         (?, ?, ?)''',t)
