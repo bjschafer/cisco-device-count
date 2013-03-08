@@ -13,7 +13,7 @@ class deviceDB(object):
         '''
         Creates the connection to the database and the schema.
         '''
-        self.columns = ["mac", "ap", "ssid", "datetime"]
+        self.columns = ["mac", "ap", "datetime"]
         self.conn = sqlite.connect(location)
         c = self.conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS devices
