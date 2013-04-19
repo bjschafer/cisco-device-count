@@ -74,6 +74,6 @@ class deviceDB(object):
         Clears the database.
         '''
         c = self.conn.cursor()
-        c.execute('''DELETE * FROM devices''')
+        c.execute('''DELETE FROM devices''')
         self.conn.commit()
         c.close()

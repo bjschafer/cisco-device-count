@@ -1,14 +1,15 @@
 from __future__ import with_statement
-from subprocess import call
+import subprocess
 from datetime import datetime
 import time
-from org.fdlpl.ciscodevicecount.deviceDB import deviceDB
+from deviceDB import deviceDB
 
 database = deviceDB("countDB")
 
 def update():
-    results = call(["wificlients.pl"])
-    
+    proc = subprocess.Popen(["wificlients.pl"], stdout=subprocess.PIPE, shell=True)
+    (results, err) = proc.communicate()
+        
     macs = []
     aps = []
     
@@ -28,8 +29,8 @@ if __name__ == '__main__':
         i = 0
         while i < 49:
             update()
-            with open('stats.txt', 'a') as f:
-                f.write(datetime.now() + ": " + database.getCount())
             time.sleep(300)
             i += 1
+        with open('stats.txt', 'a') as f:
+            f.write(str(datetime.now()) + ": " + str(database.getCount()))
         database.flush()
