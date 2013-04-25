@@ -27,10 +27,13 @@ def update():
 if __name__ == '__main__':
     while True:
         i = 0
+        count = 0
         while i < 49:
             update()
+            count += deviceDB.lastSeenUpdate()
             time.sleep(300)
             i += 1
         with open('stats.txt', 'a') as f:
-            f.write(str(datetime.now()) + ": " + str(database.getCount()))
+            f.write(str(datetime.now()) + ": " + str(database.getCount() + count))
         database.flush()
+        count = 0

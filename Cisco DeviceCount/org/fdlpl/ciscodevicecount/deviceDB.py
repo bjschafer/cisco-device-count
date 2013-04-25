@@ -69,6 +69,50 @@ class deviceDB(object):
             return False
         else:
             return True
+        
+    def seenRecently(self, mac):
+        '''
+        Checks to see whether a mac address was seen in the last four hours
+        or not.
+        '''
+        c = self.conn.cursor()
+        c.execute('''SELECT * FROM devices WHERE mac=?''', mac)
+        devicePresent == c.fetchone()
+        time = devicePresent[-15:-13]
+        time = int(time)
+        if datetime.now.hour - time > 4:
+            return False
+        else:
+            return True
+        
+    def lastSeenUpdate(self):
+        '''
+        Checks to see if any addresses were seen longer than four hours
+        ago.  If so, it removes them from the database and adds one to
+        the count for the day (which is returned to the interface to
+        handle).
+        '''
+        c = self.conn.cursor()
+        c.execute('''SELECT * FROM devices''')
+        allDevices = c.fetchall()
+        count = 0
+        for device in allDevices:
+            mac = device[2:18] # verify this
+            if self.seenRecently(mac): 
+                pass
+            else:
+                self.delete(mac)
+                count += 1
+        return count
+        
+    def delete(self, mac):
+        '''
+        Deletes a device from the database.
+        '''
+        c = self.conn.cursor()
+        c.execute('''DELETE FROM devices WHERE mac=?''', mac)
+        self.conn.commit()   
+        
     def flush(self):
         '''
         Clears the database.
