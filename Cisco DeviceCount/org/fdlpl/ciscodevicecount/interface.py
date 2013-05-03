@@ -30,7 +30,7 @@ if __name__ == '__main__':
         count = 0
         while i < 49:
             update()
-            count += deviceDB.lastSeenUpdate()
+            count += database.lastSeenUpdate()
             time.sleep(300)
             i += 1
         with open('stats.txt', 'a') as f:
