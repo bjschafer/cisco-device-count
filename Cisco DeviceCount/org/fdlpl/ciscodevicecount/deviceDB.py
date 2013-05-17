@@ -77,7 +77,7 @@ class deviceDB(object):
         '''
         c = self.conn.cursor()
         c.execute('''SELECT * FROM devices WHERE mac=?''', mac)
-        devicePresent = c.fetchone()
+        devicePresent = c.fetchall()
         time = devicePresent[-2:]
         time = int(time)
         if datetime.now.hour - time > 4:
